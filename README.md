@@ -11,6 +11,10 @@ Data and model weights are hosted at https://zenodo.org/records/11354577.
 The bash script `download.sh` will download and extract data and model weights into
 appropriate directories. 
 
+## Notebook example
+
+A simple example of using the model is given in `notebooks/example.ipynb`.
+
 ## Filter and split data 
 
 The repo comes with pre-specified data filtering (specified in `data/filters.csv`) and
