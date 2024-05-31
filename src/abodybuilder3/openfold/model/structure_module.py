@@ -100,7 +100,7 @@ class AngleResnet(nn.Module):
             epsilon:
                 Small constant for normalization
             use_original_sm:
-                If True implement line 11 of algorithm 20 correctly else use the ABB2 implementation.
+                If True implement line 11 of algorithm 20 correctly else use the ABB3 implementation.
         """
         super(AngleResnet, self).__init__()
 
@@ -583,7 +583,7 @@ class StructureModule(nn.Module):
             rotation_propagation:
                 If true allow rigid gradients to propogate
             use_original_sm:
-                If True use original structure module implementation else use ABB2. If True:
+                If True use original structure module implementation else use ABB3. If True:
                     Use bias in attention
                     Correctly implement line 11 of algorithm 20
                     Number of linear layers in AngleResnetBlock is 2 instead of 3
@@ -616,7 +616,7 @@ class StructureModule(nn.Module):
         # self.atom_mask
         # self.lit_positions
 
-        # remove to match ABB2 and because inputs are one hot encodings.
+        # remove to match ABB3 and because inputs are one hot encodings.
         # self.layer_norm_s = LayerNorm(self.c_s)
         # self.layer_norm_z = LayerNorm(self.c_z)
 
@@ -708,7 +708,7 @@ class StructureModule(nn.Module):
             # [*, N]
             mask = s.new_ones(s.shape[:-1])
 
-        # Removed to make closer to ABB2 and because the inputs are one hot encodings.
+        # Removed to make closer to ABB3 and because the inputs are one hot encodings.
         # [*, N, C_s]
         # s = self.layer_norm_s(s)
 

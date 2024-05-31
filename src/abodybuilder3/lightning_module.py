@@ -5,12 +5,12 @@ from torch.optim.lr_scheduler import LambdaLR, LinearLR, SequentialLR
 from torch.utils.data import DataLoader
 
 from abodybuilder3.dataloader import ABDataset, collate_fn
-from abodybuilder3.loss import ABB2Loss
+from abodybuilder3.loss import ABB3Loss
 from abodybuilder3.openfold.model.structure_module import StructureModule
 from abodybuilder3.radam import RAdam
 
 
-class ABB2DataModule(pl.LightningDataModule):
+class ABB3DataModule(pl.LightningDataModule):
     def __init__(
         self,
         data_dir: str = "data/",
@@ -89,7 +89,7 @@ class ABB2DataModule(pl.LightningDataModule):
         )
 
 
-class LitABB2(pl.LightningModule):
+class LitABB3(pl.LightningModule):
     def __init__(self, model_config, loss_config, optim_config):
         super().__init__()
         model_config["use_plddt"] = loss_config.plddt.weight > 0
@@ -98,7 +98,7 @@ class LitABB2(pl.LightningModule):
         self.loss_config = loss_config
         self.optim_config = optim_config
         self.model = StructureModule(**model_config)
-        self.loss = ABB2Loss(loss_config)
+        self.loss = ABB3Loss(loss_config)
         self.finetune = False
 
     def training_step(self, batch, batch_idx):

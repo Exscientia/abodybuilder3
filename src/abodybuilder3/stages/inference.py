@@ -9,7 +9,7 @@ from loguru import logger
 from tqdm import tqdm
 import typer
 
-from abodybuilder3.lightning_module import ABB2DataModule, LitABB2
+from abodybuilder3.lightning_module import ABB3DataModule, LitABB3
 
 from abodybuilder3.openfold.np.protein import Protein, to_pdb
 from abodybuilder3.openfold.np.relax.cleanup import fix_pdb
@@ -53,7 +53,7 @@ def main(
     for folder in ["true", "pred", "plddt", "pred_unfixed"]:
         (output_dir / folder).mkdir(exist_ok=True, parents=True)
 
-    data = ABB2DataModule(
+    data = ABB3DataModule(
         data_dir="data/",
         legacy=False,
         batch_size=1,
@@ -65,7 +65,7 @@ def main(
     # inference
     ckpt = output_dir / "best_second_stage.ckpt"
     logger.info(f"Loading from {ckpt=}")
-    model = LitABB2.load_from_checkpoint(ckpt)
+    model = LitABB3.load_from_checkpoint(ckpt)
     model.model.eval()
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if device == "cpu":

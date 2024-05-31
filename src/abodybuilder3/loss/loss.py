@@ -34,7 +34,7 @@ from abodybuilder3.openfold.utils.loss import (
 )
 
 
-class ABB2Loss(torch.nn.Module):
+class ABB3Loss(torch.nn.Module):
     def __init__(self, config: ml_collections.config_dict.ConfigDict):
         super().__init__()
         self.config = config

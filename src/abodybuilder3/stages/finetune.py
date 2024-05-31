@@ -14,7 +14,7 @@ from lightning.pytorch.callbacks import (
 )
 from loguru import logger
 
-from abodybuilder3.lightning_module import ABB2DataModule, LitABB2
+from abodybuilder3.lightning_module import ABB3DataModule, LitABB3
 from abodybuilder3.utils import DelayedEarlyStopping
 
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         logger.info(f"{torch.cuda.device_count()=}")
 
     legacy = not params.base.all_data
-    data = ABB2DataModule(
+    data = ABB3DataModule(
         data_dir=params.base.data_dir,
         batch_size=8,
         legacy=legacy,
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     # first stage of training
     ckpt = f"checkpoints/first_stage/best_first_stage_{params.finetune.metric}.ckpt"
     logger.info(f"Loading from {ckpt=}")
-    model = LitABB2.load_from_checkpoint(ckpt)
+    model = LitABB3.load_from_checkpoint(ckpt)
     ckpt_epoch = torch.load(ckpt)["epoch"]
     logger.info(f"Resuming from epoch {ckpt_epoch=}")
 

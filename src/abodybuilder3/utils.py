@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 def string_to_input(heavy: str, light: str, device: str = "cpu") -> dict:
-    """Generates an input formatted for an ABB2 model from heavy and light chain
+    """Generates an input formatted for an ABB3 model from heavy and light chain
     strings.
 
     Args:
@@ -69,7 +69,7 @@ def backbones_from_outputs(outputs: list[dict], aatype: torch.Tensor) -> torch.T
     Entry backbones[i, j] contains the Ca coordinates of residue i in output j.
 
     Args:
-        outputs (list[dict]): outputs from ABB2 models
+        outputs (list[dict]): outputs from ABB3 models
         aatype (torch.Tensor): an (n,) tensor of integers encoding the amino acid string
 
     Returns:
@@ -94,11 +94,11 @@ def add_atom37_to_output(output: dict, aatype: torch.Tensor):
 
 
 def output_to_pdb(output: dict, model_input: dict) -> str:
-    """Generates a pdb file from ABB2 predictions.
+    """Generates a pdb file from ABB3 predictions.
 
     Args:
-        output (dict): ABB2 output dictionary
-        model_input (dict): ABB2 input dictionary
+        output (dict): ABB3 output dictionary
+        model_input (dict): ABB3 input dictionary
 
     Returns:
         str: the contents of a pdb file in string format.

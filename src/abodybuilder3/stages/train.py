@@ -14,7 +14,7 @@ from lightning.pytorch.callbacks import (
 )
 from loguru import logger
 
-from abodybuilder3.lightning_module import ABB2DataModule, LitABB2
+from abodybuilder3.lightning_module import ABB3DataModule, LitABB3
 
 if __name__ == "__main__":
     torch.set_float32_matmul_precision("medium")
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     # data module
     legacy = not params.base.all_data
-    data = ABB2DataModule(
+    data = ABB3DataModule(
         data_dir=params.base.data_dir,
         batch_size=8,
         legacy=legacy,
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         logger.info(f"{accumulate_grad_batches=}")
 
     # first stage of training
-    model = LitABB2(model_config, loss_config, optimiser_config)
+    model = LitABB3(model_config, loss_config, optimiser_config)
     callbacks = [
         ModelCheckpoint(
             dirpath="checkpoints/first_stage/",
