@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm>=6.2,<8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+local_scheme = "dirty-tag"
+version_scheme = "no-guess-dev"
+write_to = "src/abodybuilder3/_version.py"
+
+[tool.black]
+line-length = 88
+# Keep this in sync with ISORT_SOURCE_PATHS variable in noxfile.py.
+include = '/src/.*\.pyi?$|/tests/.*\.pyi?$|/docs/.*\.pyi?$|noxfile.py'
+
+[tool.ruff]
+cache-dir = ".cache/ruff"
+# https://beta.ruff.rs/docs/rules
+select = [
+    "A", #flake8-builtins: https://github.com/gforcada/flake8-builtins
+    "B", #flake8-bugbear: https://pypi.org/project/flake8-bugbear/
+    "E", #pycodestyle (errors): https://beta.ruff.rs/docs/rules/#error-e
+    "F", #pyflakes: https://beta.ruff.rs/docs/rules/#pyflakes-f
+    "I", # isort: https://beta.ruff.rs/docs/rules/#isort-i
+    "NPY", # numpy: https://beta.ruff.rs/docs/rules/#numpy-specific-rules-npy
+    "PD", # pandas-vet: https://pypi.org/project/pandas-vet/
+    "PLE", # pylint errors: https://beta.ruff.rs/docs/rules/#pylint-pl
+    "PT", # flake8-pytest-style: https://pypi.org/project/flake8-pytest-style/
+    "SIM", # flake8-simplify: https://pypi.org/project/flake8_simplify/
+    "TRY", # tryceratops: https://pypi.org/project/tryceratops/ , https://guicommits.com/handling-exceptions-in-python-like-a-pro/
+    "RUF", #ruff specific: https://beta.ruff.rs/docs/rules/#ruff-specific-rules-ruf
+]
+ignore = [
+    "B008", # "Do not call function in argument defaults" (conflicts with use of `typer.Option`)
+    "B028", # "explicit `stacklevel` for warnings.warn" (I don't feel this is necessary in typical usage.)
+    "E501", # "line too long" (for strings and *comments*, which cannot be autofixed.)
+    "SIM108", # "use ternary operator instead" (often harder to read than a multiline if-then-else block.)
+    "TRY003", # "Avoid specifying long messages" (The alternative would be *many* different exception classes.)
+    "TRY200", # "Use raise from" (Duplicates B904, but with a less informative error message.)
+    "TRY300", # "Use try-except-else" (A useful smell-test, but `try-except-else` only makes sense with `finally`.)
+]
+
+[tool.ruff.isort]
+known-first-party = [
+    "abodybuilder3",
+]
+
+[tool.pytest.ini_options]
+cache_dir = ".cache/pytest_cache"
+minversion = "6.0"
+addopts = "-rv --color=yes"
+testpaths = ['tests']
+log_cli = true
+log_cli_level = "WARNING"
+log_cli_format = "%(levelname)s:%(name)s: %(message)s"
+
+[tool.coverage.run]
+source_pkgs = ['abodybuilder3']
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "@overload",
+]
+
+[tool.mypy]
+# paths
+cache_dir = ".cache/mypy_cache"
+files = [
+    'src/',
+    'tests/',
+    'noxfile.py',
+]
+# Make mypy work properly with namespace package:
+# ( https://mypy.readthedocs.io/en/stable/running_mypy.html#mapping-paths-to-modules )
+mypy_path = 'src'
+namespace_packages = true
+explicit_package_bases = true
+# General settings
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_decorators = false
+disallow_untyped_defs = true
+ignore_missing_imports = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_ignores = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = 'tests.*'
+disallow_untyped_defs = false
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = 'noxfile'
+disallow_untyped_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+
+[tool.pyright]
+reportMissingParameterType = 'warning'

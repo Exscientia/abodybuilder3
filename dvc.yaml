@@ -1,0 +1,95 @@
+stages:
+  extract_data:
+    cmd: tar -xzf data/data.tar.gz && md5sum data/data.tar.gz > data/data.tar.gz.hash
+    always_changed: true
+    deps:
+    - data/data.tar.gz
+    outs:
+    - data/data.tar.gz.hash
+  combine_dfs:
+    cmd: python src/abodybuilder3/stages/data/combine_data_dfs.py
+    deps:
+    - data/data.tar.gz.hash
+    outs:
+    - data/structures/success_df.csv:
+        cache: false
+    - data/structures/summary_df.csv:
+        cache: false
+  filter:
+    cmd: python src/abodybuilder3/stages/data/filter_data.py
+    params:
+    - filter
+    deps:
+    - data/structures/summary_df.csv
+    outs:
+    - data/filters.csv:
+        cache: false
+  split:
+    cmd: python src/abodybuilder3/stages/data/split_data.py
+    params:
+    - split
+    deps:
+    - data/structures/summary_df.csv
+    - data/clusters.csv
+    - data/filters.csv
+    outs:
+    - data/split.csv:
+        cache: false
+    - data/valid_test_set_similarity.csv
+  embeddings:
+    cmd: python src/abodybuilder3/stages/data/language_model_embeddings.py
+    params:
+    - language
+    deps:
+    - data/structures/summary_df.csv
+    outs:
+    - data/structures/structures_plm.tar.gz
+  extract_embeddings:
+    cmd: tar -xzf data/structures/structures_plm.tar.gz && md5sum data/structures/structures_plm.tar.gz > data/structures/structures_plm.tar.gz.hash
+    always_changed: true
+    deps:
+    - data/structures/structures_plm.tar.gz
+    outs:
+    - data/structures/structures_plm.tar.gz.hash
+  train:
+    cmd: ${base.cmd} src/abodybuilder3/stages/train.py
+    deps:
+    - data/split.csv
+    - data/structures/structures_plm.tar.gz.hash
+    params:
+    - base
+    - model
+    - train
+    outs:
+    - checkpoints/first_stage/best_first_stage_loss.ckpt
+    - checkpoints/first_stage/best_first_stage_cdrh3_rmsd.ckpt
+    - checkpoints/first_stage/best_first_stage_plddt.ckpt
+    - dvclive/first_stage/plots/
+  finetune:
+    cmd: ${base.cmd} src/abodybuilder3/stages/finetune.py
+    deps:
+    - checkpoints/first_stage/best_first_stage_loss.ckpt
+    params:
+    - base
+    - train
+    - finetune
+    outs:
+    - checkpoints/second_stage/best_second_stage_loss.ckpt
+    - checkpoints/second_stage/best_second_stage_cdrh3_rmsd.ckpt
+    - checkpoints/second_stage/best_second_stage_plddt.ckpt
+    - dvclive/second_stage/plots/
+  inference:
+    cmd: python src/abodybuilder3/stages/inference.py
+    deps:
+    - checkpoints/second_stage/best_second_stage_loss.ckpt
+    - checkpoints/second_stage/best_second_stage_cdrh3_rmsd.ckpt
+    - checkpoints/second_stage/best_second_stage_plddt.ckpt
+    params:
+    - base
+    - inference
+    - finetune
+    outs:
+    - ${inference.output_dir}pred
+    - ${inference.output_dir}refine
+    - ${inference.output_dir}true
+    - ${inference.output_dir}plddt

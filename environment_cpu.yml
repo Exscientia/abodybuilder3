@@ -1,0 +1,14 @@
+channels:
+  - conda-forge
+  - pytorch
+  - nodefaults
+  - bioconda
+dependencies:
+- python=3.9
+- pip>=21.0
+- numpy=1.21.6
+- pytorch=2.0.1
+- openmm=7.7
+- pdbfixer=1.8.1
+- mmseqs2=14.7e284
+- scipy=1.11.2

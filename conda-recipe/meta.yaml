@@ -1,0 +1,19 @@
+package:
+  name: abodybuilder3
+  version: "_CONDA_PACKAGE_VERSION"
+build:
+  noarch: python
+  string: py311
+requirements:
+  pin_depends:
+    - strict
+  build:
+    - python=3.11
+    - pip>=21.0
+  run:
+    - python=3.11
+    - pip>=21.0
+about:
+  home: https://github.com/Exscientia/abodybuilder3
+  license: Exscientia
+  summary: abodybuilder3

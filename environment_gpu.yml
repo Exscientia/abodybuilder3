@@ -1,0 +1,16 @@
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+  - nodefaults
+  - bioconda
+dependencies:
+- pip>= 21.3.1
+- cudatoolkit=11.7
+- pytorch=2.0
+- python=3.9
+- mkl=2021.1.1
+- openmm=7.7
+- pdbfixer=1.8.1
+- mmseqs2
+- scipy

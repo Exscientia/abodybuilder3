@@ -1,0 +1,105 @@
+base:
+  seed: 100
+  cmd: python
+  debug: true
+  data_dir: data/
+  all_data: true
+  num_workers: 0
+  pin_memory: false
+
+cluster:
+  min_seq_id: 0.95
+  coverage: 0.8
+
+filter:
+  resolution_cutoff: 3.5
+  abangle_cutoff: 3.5
+  cdrh3_length_cutoff: 30
+  total_cdr_length_cutoff: 500
+  rare_species_cutoff: 15
+
+split:
+  seed: 0
+  validation_size: 150
+  test_size: 100
+  valid_test_max_cluster_size: 10
+  test_valid_resolution_cutoff: 2.3
+  test_valid_cdrh3_cutoff: 22
+  use_cdr_pseudosequence: true
+
+model:
+  edge_chain_feature: true
+  use_original_sm: true
+  c_ipa: 16
+  c_resnet: 256
+  c_s: 23
+  rel_pos_dim: 64
+  dropout_rate: 0.1
+  embed_dim: 128
+  epsilon: 1.0e-07
+  inf: 10000000.0
+  no_angles: 7
+  no_blocks: 8
+  no_heads_ipa: 12
+  no_qk_points: 4
+  no_resnet_blocks: 2
+  no_transition_layers: 1
+  no_v_points: 8
+  rotation_propagation: true
+  trans_scale_factor: 1
+
+
+train:
+  epochs: 1000
+  batch_size: 64
+  early_stopping: 10000
+
+finetune:
+  metric: loss
+  epochs: 500
+  batch_size: 64
+  early_stopping: 10000
+  use_annealing: true
+  dropout: 0.1
+  turn_off_scheduler: true
+  learning_rate: 1e-4
+
+inference:
+  output_dir: output/
+
+loss:
+  fape:
+    weight: 1.0
+    backbone:
+      weight: 0.5
+    sidechain:
+      weight: 1.0
+  final_output_backbone_loss:
+    weight: 0.5
+  supervised_chi:
+    angle_norm_weight: 0.02
+    chi_weight: 0.5
+    weight: 1.0
+  violation:
+    clash_overlap_tolerance: 1.5
+    violation_tolerance_factor: 12.0
+  violation_loss_bondangle:
+    weight: 0.1
+  violation_loss_bondlength:
+    weight: 0.1
+  violation_loss_clash:
+    weight: 0.1
+  plddt:
+    weight: 0.01
+
+optimiser:
+  optimiser: RAdam
+  lr: 5e-4
+  weight_decay: 0.0001
+  T_0: 50
+  eta_min: 0
+  T_mult: 1
+
+language:
+  model: null
+  chunk_size: 1000

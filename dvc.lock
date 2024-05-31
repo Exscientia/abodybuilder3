@@ -1,0 +1,114 @@
+schema: '2.0'
+stages:
+  extract_data:
+    cmd: tar -xzf data/data.tar.gz && md5sum data/data.tar.gz > data/data.tar.gz.hash
+    deps:
+    - path: data/data.tar.gz
+      md5: 73d66051b6e8cb435f1804e10ee4aa2f
+      size: 3020370695
+    outs:
+    - path: data/data.tar.gz.hash
+      md5: e1965d41201a3bd4c0ea8881f8df8f1c
+      size: 51
+  combine_dfs:
+    cmd: python src/abodybuilder3/stages/data/combine_data_dfs.py
+    deps:
+    - path: data/data.tar.gz.hash
+      md5: e1965d41201a3bd4c0ea8881f8df8f1c
+      size: 51
+    outs:
+    - path: data/structures/success_df.csv
+      md5: 9ac3522949828c5f96d1d585320c0116
+      size: 610263
+    - path: data/structures/summary_df.csv
+      md5: 1e15be365726adeeb2c40890893548ab
+      size: 6033272
+  embeddings:
+    cmd: python src/abodybuilder3/stages/data/language_model_embeddings.py
+    deps:
+    - path: data/structures/summary_df.csv
+      md5: 1e15be365726adeeb2c40890893548ab
+      size: 6033272
+    params:
+      params.yaml:
+        language:
+          model:
+          chunk_size: 1000
+    outs:
+    - path: data/structures/structures_plm.tar.gz
+      md5: e593237bce149f736040580ec432e3b0
+      size: 64
+  extract_embeddings:
+    cmd: tar -xzf data/structures/structures_plm.tar.gz && md5sum data/structures/structures_plm.tar.gz
+      > data/structures/structures_plm.tar.gz.hash
+    deps:
+    - path: data/structures/structures_plm.tar.gz
+      md5: e593237bce149f736040580ec432e3b0
+      size: 64
+    outs:
+    - path: data/structures/structures_plm.tar.gz.hash
+      md5: 4742735d41a9fe7318c456c169adc478
+      size: 72
+  cluster:
+    cmd: python src/abodybuilder3/stages/data/cluster_data.py
+    deps:
+    - path: data/structures/summary_df.csv
+      md5: 1e15be365726adeeb2c40890893548ab
+      size: 6033272
+    params:
+      params.yaml:
+        cluster:
+          min_seq_id: 0.95
+          coverage: 0.8
+    outs:
+    - path: data/clusters.csv
+      md5: fcdbf74ff2d8995da77075d79671ba20
+      size: 260832
+  filter:
+    cmd: python src/abodybuilder3/stages/data/filter_data.py
+    deps:
+    - path: data/structures/summary_df.csv
+      md5: 1e15be365726adeeb2c40890893548ab
+      size: 6033272
+    params:
+      params.yaml:
+        filter:
+          resolution_cutoff: 3.5
+          abangle_cutoff: 3.5
+          cdrh3_length_cutoff: 30
+          total_cdr_length_cutoff: 500
+          rare_species_cutoff: 15
+    outs:
+    - path: data/filters.csv
+      md5: c3767cf2580815f26546ff2189d161e7
+      size: 904862
+  split:
+    cmd: python src/abodybuilder3/stages/data/split_data.py
+    deps:
+    - path: data/clusters.csv
+      md5: fcdbf74ff2d8995da77075d79671ba20
+      size: 260832
+    - path: data/filters.csv
+      md5: c3767cf2580815f26546ff2189d161e7
+      size: 904862
+    - path: data/structures/summary_df.csv
+      md5: 1e15be365726adeeb2c40890893548ab
+      size: 6033272
+    params:
+      params.yaml:
+        split:
+          seed: 0
+          validation_size: 150
+          test_size: 100
+          valid_test_max_cluster_size: 10
+          test_valid_resolution_cutoff: 2.3
+          test_valid_cdrh3_cutoff: 22
+          use_clustering: false
+          use_cdr_pseudosequence: true
+    outs:
+    - path: data/split.csv
+      md5: 5c181f849e8651132e19098457db2262
+      size: 259543
+    - path: data/valid_test_set_similarity.csv
+      md5: 8454f1a7ee95be455318409cf48d9b43
+      size: 123455348
