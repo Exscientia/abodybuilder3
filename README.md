@@ -13,8 +13,7 @@ appropriate directories.
 
 If you only require model weights for inference, these can be downloaded and extracted with the following commands.
 ```
-mkdir -p zenodo
-mkdir -p output/
+mkdir -p output/ zenodo/
 wget -P zenodo/ https://zenodo.org/records/11354577/files/output.tar.gz
 tar -xzvf zenodo/output.tar.gz -C output/
 ```
