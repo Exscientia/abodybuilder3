@@ -14,3 +14,5 @@ dependencies:
 - pdbfixer=1.8.1
 - mmseqs2
 - scipy
+- biopython
+- jupyter
