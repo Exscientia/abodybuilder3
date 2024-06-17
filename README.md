@@ -19,6 +19,18 @@ wget -P zenodo/ https://zenodo.org/records/11354577/files/output.tar.gz
 tar -xzvf zenodo/output.tar.gz -C output/
 ```
 
+## Installation
+
+To create a conda environment with all required dependencies, you can use
+
+```
+./init_conda_venv.sh
+```
+After installation, the environment can be activated with
+```
+conda activate ./.venv
+```
+
 ## Notebook example
 
 A simple example of using the model is given in `notebooks/example.ipynb`.
