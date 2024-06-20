@@ -7,10 +7,7 @@ dvc pull
 # run script
 dvc exp run \
     -S base.cmd="srun python" \
-    -S base.debug=false \
-    -S finetune.epochs=400 \
-    -S finetune.early_stopping=400 \
-    -S finetune.metric=plddt
+    -S base.debug=false
 
 # push results
 dvc exp push origin --rev HEAD
