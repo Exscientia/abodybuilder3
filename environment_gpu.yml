@@ -16,3 +16,4 @@ dependencies:
 - scipy
 - biopython
 - jupyter
+- accelerate
