@@ -25,6 +25,7 @@ class ProtTrans:
     model_type: str
     paired: bool
     batch_size: int = 1
+    device_map: str = 'auto'
     tokeniser: PreTrainedTokenizer = field(init=False)
     seperator_token: Optional[str] = field(init=False)
     trainer: Optional[Trainer] = field(init=False)
@@ -34,7 +35,7 @@ class ProtTrans:
             raise ValueError(f"Model should be 'bert' or 't5'. Got {self.model_type=}.")
 
         self.embedding_module = ProtTransEmbedder(
-            weights_dir=self.weights_dir, model_type=self.model_type
+            weights_dir=self.weights_dir, model_type=self.model_type, device_map=self.device_map
         )
 
         if self.model_type == "bert":
@@ -98,6 +99,7 @@ class ProtTransEmbedder(LightningModule):
         self,
         weights_dir: Path,
         model_type: str,
+        device_map: str,
     ) -> None:
         super().__init__()
         if model_type not in ["bert", "t5"]:
@@ -107,10 +109,10 @@ class ProtTransEmbedder(LightningModule):
 
         if model_type == "bert":
             self.model = BertModel.from_pretrained(
-                self.weights_dir, add_pooling_layer=False
+                self.weights_dir, add_pooling_layer=False, device_map=device_map
             )
         elif model_type == "t5":
-            self.model = T5EncoderModel.from_pretrained(self.weights_dir)
+            self.model = T5EncoderModel.from_pretrained(self.weights_dir, device_map=device_map)
 
         if self.model_type == "bert":
             self.seperator_token_id = 3
