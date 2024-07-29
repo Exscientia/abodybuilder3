@@ -73,7 +73,7 @@ the manuscript.
 
 # Citation
 
-If this code is useful to you please cite our paper using the following bibtex entry.
+If this code is useful to you please cite our paper using the following bibtex entry,
 
 ```
 @article{kenlay2024abodybuilder3,
@@ -81,5 +81,21 @@ If this code is useful to you please cite our paper using the following bibtex e
   author={Kenlay, Henry and Dreyer, Fr{\'e}d{\'e}ric A and Cutting, Daniel and Nissley, Daniel and Deane, Charlotte M},
   journal={arXiv preprint arXiv:2405.20863},
   year={2024}
+}
+```
+
+along with the original ImmuneBuilder paper on which this work was based.
+
+```
+@article{Abanades2023,
+  author = {Abanades, Brennan and Wong, Wing Ki and Boyles, Fergus and Georges, Guy and Bujotzek, Alexander and Deane, Charlotte M.},
+  doi = {10.1038/s42003-023-04927-7},
+  issn = {2399-3642},
+  journal = {Communications Biology},
+  number = {1},
+  pages = {575},
+  title = {ImmuneBuilder: Deep-Learning models for predicting the structures of immune proteins},
+  volume = {6},
+  year = {2023}
 }
 ```
