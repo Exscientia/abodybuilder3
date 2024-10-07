@@ -176,3 +176,5 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 output
 zenodo
+data/structures/structures
+data/structures/structures_plm

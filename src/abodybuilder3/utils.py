@@ -8,9 +8,9 @@ from lightning.pytorch.callbacks import EarlyStopping
 from abodybuilder3.dataloader import ABDataset
 from abodybuilder3.openfold.data.data_transforms import make_atom14_masks
 from abodybuilder3.openfold.np.protein import Protein, to_pdb
-from abodybuilder3.openfold.np.relax.cleanup import fix_pdb
 from abodybuilder3.openfold.np.residue_constants import restype_order_with_x
 from abodybuilder3.openfold.utils.feats import atom14_to_atom37
+from abodybuilder3.openfold.utils.loss import compute_plddt
 
 log = logging.getLogger(__name__)
 
@@ -108,18 +108,22 @@ def output_to_pdb(output: dict, model_input: dict) -> str:
     chain_index = 1 - model_input["is_heavy"].cpu().numpy().astype(int)
     atom_mask = output["atom37_atom_exists"].cpu().numpy().astype(int)
     residue_index = np.arange(len(atom37))
+    if "plddt" in output:
+        plddt = compute_plddt(output["plddt"].squeeze()).unsqueeze(1)
+        b_factors = plddt.repeat(1, 37).detach().cpu().numpy()
+    else:
+        b_factors = np.zeros_like(atom_mask)
 
     protein = Protein(
         aatype=aatype,
         atom_positions=atom37,
         atom_mask=atom_mask,
         residue_index=residue_index,
-        b_factors=np.zeros_like(atom_mask),
+        b_factors=b_factors,
         chain_index=chain_index,
     )
 
-    pdb = fix_pdb(io.StringIO(to_pdb(protein)), {})
-    return pdb
+    return to_pdb(protein)
 
 
 class DelayedEarlyStopping(EarlyStopping):
