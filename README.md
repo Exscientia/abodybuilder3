@@ -77,10 +77,16 @@ If this code is useful to you please cite our paper using the following bibtex e
 
 ```
 @article{abodybuilder3,
-  title={ABodyBuilder3: Improved and scalable antibody structure predictions},
-  author={Kenlay, Henry and Dreyer, Fr{\'e}d{\'e}ric A and Cutting, Daniel and Nissley, Daniel and Deane, Charlotte M},
-  journal={arXiv preprint arXiv:2405.20863},
-  year={2024}
+    author = {Kenlay, Henry and Dreyer, Frédéric A and Cutting, Daniel and Nissley, Daniel and Deane, Charlotte M},
+    title = "{ABodyBuilder3: improved and scalable antibody structure predictions}",
+    journal = {Bioinformatics},
+    volume = {40},
+    number = {10},
+    pages = {btae576},
+    year = {2024},
+    month = {10},
+    issn = {1367-4811},
+    doi = {10.1093/bioinformatics/btae576}
 }
 ```
 
